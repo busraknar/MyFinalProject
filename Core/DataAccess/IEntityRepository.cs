@@ -1,5 +1,6 @@
-﻿using Entities.Abstract;
-using Entities.Concrete;
+﻿
+
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Abstract
+namespace Core.DataAccess   //CORE KATMANLARI DİĞER SINIFLARI REFERANS ALMAZ
 {
     //generic constraint-- jenerik kısıt
     // class = referans tip - sınıf demek değil
@@ -15,6 +16,7 @@ namespace DataAccess.Abstract
     //new() - new'lenebilir olmalı
 
     public interface IEntityRepository<T> where T : class, IEntity ,new()
+        //AMPUL GELMİYORSA CTRL NOKTA
     {
         List<T> GetAll(Expression<Func <T,bool>> filter=null);
         //p=> p.categoryIdgibi filtreler oluşturabilmek için Expression kullanılır.
