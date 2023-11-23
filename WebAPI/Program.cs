@@ -1,22 +1,30 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Business.Abstract;
 using Business.Concrete;
+using Business.DependencyResolves.Autofac;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Microsoft.Identity.Client;
 
-internal class Program
+public class Program
 {
-    private static void Main(string[] args)
+    public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+
+        builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+        builder.Host.ConfigureContainer<ContainerBuilder>(
+            builder => builder.RegisterModule(new AutofacBusinessModule()));
 
         // Add services to the container.
 
         builder.Services.AddControllers();
         
         
-        builder.Services.AddSingleton<IProductService, ProductManager>();
-        builder.Services.AddSingleton<IProductDal, EfProductDal>();
+        //builder.Services.AddSingleton<IProductService, ProductManager>();
+        //builder.Services.AddSingleton<IProductDal, EfProductDal>();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
@@ -48,4 +56,13 @@ internal class Program
 
         app.Run();
     }
+
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+        .UseServiceProviderFactory( new AutofacServiceProviderFactory())
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Program>();
+        });
 }
